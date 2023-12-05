@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -69,72 +70,72 @@
     }
   </style>
 </head>
+
 <body>
   <h1>Will's CS2 SurfTimer to SharpTimer Records</h1>
-  
+
   <label for="inputJson">Converted VDF:</label>
   <textarea id="inputJson" rows="10" cols="50" placeholder="Enter JSON here..."></textarea>
-  
+
   <button onclick="convertJson()">Convert</button>
-  
+
   <label for="outputJson">Output JSON:</label>
   <textarea id="outputJson" rows="10" cols="50" readonly placeholder="Output JSON will appear here..."></textarea>
 
   <!-- Additional label for VDF parser link -->
-  <label id="vdfParserLink" for="vdfParser">VDF Parser: <a href="https://rgp.io/vdf-parser/" target="_blank">https://rgp.io/vdf-parser/</a></label>
+  <label id="vdfParserLink" for="vdfParser">VDF Parser: <a href="https://rgp.io/vdf-parser/"
+      target="_blank">https://rgp.io/vdf-parser/</a></label>
 
-<script>
+  <script>
     function steamid3ToSteamid64(usteamid) {
-        const steamid64ident = 76561197960265728;
-        for (const ch of ['[', ']']) {
-            usteamid = usteamid.replace(ch, '');
-        }
+      const steamid64ident = 76561197960265728;
+      for (const ch of ['[', ']']) {
+        usteamid = usteamid.replace(ch, '');
+      }
 
-        const usteamidSplit = usteamid.split(':');
-        const commid = parseInt(usteamidSplit[2]) + steamid64ident;
+      const usteamidSplit = usteamid.split(':');
+      const commid = parseInt(usteamidSplit[2]) + steamid64ident;
 
-        return commid.toString();
+      return commid.toString();
     }
 
     function secondsToTicks(seconds) {
-        const ticksPerSecond = 64;
-        const ticks = Math.floor(seconds * ticksPerSecond);
-        return ticks;
+      const ticksPerSecond = 64;
+      const ticks = Math.floor(seconds * ticksPerSecond);
+      return ticks;
     }
 
     function convertJson() {
-        const inputJsonElement = document.getElementById('inputJson');
-        const outputJsonElement = document.getElementById('outputJson');
+      const inputJsonElement = document.getElementById('inputJson');
+      const outputJsonElement = document.getElementById('outputJson');
 
-        try {
-            const inputJson = JSON.parse(inputJsonElement.value);
-            const outputJson = {};
+      try {
+        const inputJson = JSON.parse(inputJsonElement.value);
+        const outputJson = {};
 
-            for (const mapName in inputJson) {
-                outputJson[mapName] = {};
-                for (const usteamid in inputJson[mapName].data) {
-                    const playerData = inputJson[mapName].data[usteamid];
-                    const steamid64 = steamid3ToSteamid64(usteamid);
-                    const timerTicks = secondsToTicks(parseFloat(playerData.time));
+        for (const mapName in inputJson) {
+          outputJson[mapName] = {};
+          for (const usteamid in inputJson[mapName].data) {
+            const playerData = inputJson[mapName].data[usteamid];
+            const steamid64 = steamid3ToSteamid64(usteamid);
+            const timerTicks = secondsToTicks(parseFloat(playerData.time));
 
-                    // Replace non-alphanumeric characters in PlayerName with Unicode representations
-                    const playerNameUnicode = playerData.name.replace(/[^a-zA-Z0-9 ]/g, (match) => {
-                        const unicodeValue = match.charCodeAt(0).toString(16).padStart(4, '0');
-                        return '\\u' + unicodeValue;
-                    });
+            // Replace non-alphanumeric characters in PlayerName with "?"
+            const playerNameWithQuestionMarks = playerData.name.replace(/[^a-zA-Z0-9 ]/g, '?');
 
-                    outputJson[mapName][steamid64] = {
-                        PlayerName: playerNameUnicode,
-                        TimerTicks: timerTicks
-                    };
-                }
-            }
-
-            outputJsonElement.value = JSON.stringify(outputJson, null, 2);
-        } catch (error) {
-            outputJsonElement.value = 'Error: Invalid JSON input';
+            outputJson[mapName][steamid64] = {
+              PlayerName: playerNameWithQuestionMarks,
+              TimerTicks: timerTicks
+            };
+          }
         }
+
+        outputJsonElement.value = JSON.stringify(outputJson, null, 2);
+      } catch (error) {
+        outputJsonElement.value = 'Error: Invalid JSON input';
+      }
     }
-</script>
+  </script>
 </body>
+
 </html>
