@@ -72,7 +72,7 @@
 <body>
   <h1>Will's CS2 SurfTimer to SharpTimer Records</h1>
   
-  <label for="inputJson">Parsed VDF:</label>
+  <label for="inputJson">Converted VDF:</label>
   <textarea id="inputJson" rows="10" cols="50" placeholder="Enter JSON here..."></textarea>
   
   <button onclick="convertJson()">Convert</button>
@@ -83,7 +83,7 @@
   <!-- Additional label for VDF parser link -->
   <label id="vdfParserLink" for="vdfParser">VDF Parser: <a href="https://rgp.io/vdf-parser/" target="_blank">https://rgp.io/vdf-parser/</a></label>
 
-  <script>
+<script>
     function steamid3ToSteamid64(usteamid) {
         const steamid64ident = 76561197960265728;
         for (const ch of ['[', ']']) {
@@ -99,7 +99,7 @@
     function secondsToTicks(seconds) {
         const ticksPerSecond = 64;
         const ticks = Math.floor(seconds * ticksPerSecond);
-        return ticks.toString();
+        return ticks;
     }
 
     function convertJson() {
@@ -117,8 +117,14 @@
                     const steamid64 = steamid3ToSteamid64(usteamid);
                     const timerTicks = secondsToTicks(parseFloat(playerData.time));
 
+                    // Replace non-alphanumeric characters in PlayerName with Unicode representations
+                    const playerNameUnicode = playerData.name.replace(/[^a-zA-Z0-9 ]/g, (match) => {
+                        const unicodeValue = match.charCodeAt(0).toString(16).padStart(4, '0');
+                        return '\\u' + unicodeValue;
+                    });
+
                     outputJson[mapName][steamid64] = {
-                        PlayerName: playerData.name,
+                        PlayerName: playerNameUnicode,
                         TimerTicks: timerTicks
                     };
                 }
@@ -129,6 +135,6 @@
             outputJsonElement.value = 'Error: Invalid JSON input';
         }
     }
-  </script>
+</script>
 </body>
 </html>
