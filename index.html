@@ -30,7 +30,7 @@
     }
 
     textarea {
-      width: 75%;
+      width: 45%;
       padding: 10px;
       margin-top: 5px;
       margin-bottom: 20px;
@@ -80,6 +80,8 @@
   <h1>Will's CS2 SurfTimer to SharpTimer Records</h1>
 
   <label for="inputJson">Converted VDF:</label>
+  <label id="vdfParserLink" for="vdfParser">VDF Parser: <a href="https://rgp.io/vdf-parser/"
+      target="_blank">https://rgp.io/vdf-parser/</a></label>
   <textarea id="inputJson" rows="10" cols="50" placeholder="Enter JSON here..."></textarea>
 
   <button onclick="convertJson()">Convert</button>
@@ -87,9 +89,6 @@
   <label for="outputJson">Output JSON:</label>
   <textarea id="outputJson" rows="10" cols="50" readonly placeholder="Output JSON will appear here..."></textarea>
 
-  <!-- Additional label for VDF parser link -->
-  <label id="vdfParserLink" for="vdfParser">VDF Parser: <a href="https://rgp.io/vdf-parser/"
-      target="_blank">https://rgp.io/vdf-parser/</a></label>
 
   <script>
     function steamid3ToSteamid64(usteamid) {
