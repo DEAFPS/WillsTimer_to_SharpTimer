@@ -88,16 +88,16 @@
 
   <script>
     function steamid3ToSteamid64(usteamid) {
-        const steamid64ident = 76561197960265728;
-        for (const ch of ['[', ']']) {
-            usteamid = usteamid.replace(ch, '');
-        }
+		const steamid64ident = BigInt('76561197960265728');
+		for (const ch of ['[', ']']) {
+			usteamid = usteamid.replace(ch, '');
+		}
 
-        const usteamidSplit = usteamid.split(':');
-        const commid = parseInt(usteamidSplit[2]) + steamid64ident;
+		const usteamidSplit = usteamid.split(':');
+		const commid = BigInt(usteamidSplit[2]) + steamid64ident;
 
-        return commid.toString();
-    }
+		return commid.toString();
+	}
 
     function secondsToTicks(seconds) {
         const ticksPerSecond = 64;
