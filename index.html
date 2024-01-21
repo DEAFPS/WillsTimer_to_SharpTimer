@@ -2,141 +2,154 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Will's CS2 SurfTimer to SharpTimer Records</title>
-  <style>
-    body {
-      font-family: 'Arial', sans-serif;
-      background-color: #121212;
-      color: #ffffff;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Will's CS2 SurfTimer to SharpTimer Records</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
 
-    h1 {
-      color: #64B5F6;
-    }
+        h1 {
+            color: #64B5F6;
+        }
 
-    label {
-      margin-top: 10px;
-      display: block;
-      font-size: 16px;
-    }
+        label {
+            margin-top: 10px;
+            display: block;
+            font-size: 16px;
+        }
 
-    textarea {
-      width: 45%;
-      padding: 10px;
-      margin-top: 5px;
-      margin-bottom: 20px;
-      border: 1px solid #424242;
-      border-radius: 4px;
-      box-sizing: border-box;
-      resize: vertical;
-      height: 500px;
-      background-color: #212121;
-      color: #ffffff;
-    }
+        textarea {
+            width: 45%;
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 20px;
+            border: 1px solid #424242;
+            border-radius: 4px;
+            box-sizing: border-box;
+            resize: vertical;
+            height: 500px;
+            background-color: #212121;
+            color: #ffffff;
+        }
 
-    button {
-      background-color: #4caf50;
-      color: white;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 16px;
-    }
+        button {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
 
-    button:hover {
-      background-color: #45a049;
-    }
+        button:hover {
+            background-color: #45a049;
+        }
 
-    #outputJson {
-      font-family: monospace;
-      background-color: #212121;
-      color: #ffffff;
-    }
+        #outputJson {
+            font-family: monospace;
+            background-color: #212121;
+            color: #ffffff;
+        }
 
-    #vdfParserLink {
-      margin-top: 10px;
-      font-size: 14px;
-      color: #64B5F6;
-      text-decoration: none;
-    }
+        #vdfParserLink {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #64B5F6;
+            text-decoration: none;
+        }
 
-    #vdfParserLink:hover {
-      text-decoration: underline;
-    }
-  </style>
+        #vdfParserLink:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 
 <body>
-  <h1>Will's CS2 SurfTimer to SharpTimer Records</h1>
+    <h1>Will's CS2 SurfTimer to SharpTimer Records</h1>
 
-  <label for="inputJson">Converted VDF:</label>
-  <label id="vdfParserLink" for="vdfParser">VDF Parser: <a href="https://rgp.io/vdf-parser/"
-      target="_blank">https://rgp.io/vdf-parser/</a></label>
-  <textarea id="inputJson" rows="10" cols="50" placeholder="Enter JSON here..."></textarea>
+    <label for="inputJson">Converted VDF:</label>
+    <label id="vdfParserLink" for="vdfParser">VDF Parser: <a href="https://rgp.io/vdf-parser/"
+            target="_blank">https://rgp.io/vdf-parser/</a></label>
+    <textarea id="inputJson" rows="10" cols="50" placeholder="Enter JSON here..."></textarea>
 
-  <button onclick="convertJson()">Convert</button>
+    <button onclick="convertJson()">Convert</button>
 
-  <label for="outputJson">Output JSON:</label>
-  <textarea id="outputJson" rows="10" cols="50" readonly placeholder="Output JSON will appear here..."></textarea>
-
-
-  <script>
-    function steamid3ToSteamid64(usteamid) {
-		const steamid64ident = BigInt('76561197960265728');
-		for (const ch of ['[', ']']) {
-			usteamid = usteamid.replace(ch, '');
-		}
-
-		const usteamidSplit = usteamid.split(':');
-		const commid = BigInt(usteamidSplit[2]) + steamid64ident;
-
-		return commid.toString();
-	}
-
-    function secondsToTicks(seconds) {
-        const ticksPerSecond = 64;
-        const ticks = Math.floor(seconds * ticksPerSecond);
-        return ticks;
-    }
-
-    function convertJson() {
-        const inputJsonElement = document.getElementById('inputJson');
-        const outputJsonElement = document.getElementById('outputJson');
-
-        try {
-            const inputJson = JSON.parse(inputJsonElement.value);
-            const outputJson = {};
-
-            for (const mapName in inputJson) {
-                outputJson[mapName] = {};
-                for (const usteamid in inputJson[mapName].data) {
-                    const playerData = inputJson[mapName].data[usteamid];
-                    const steamid64 = steamid3ToSteamid64(usteamid);
-                    const timerTicks = secondsToTicks(parseFloat(playerData.time));
-
-                    outputJson[mapName][steamid64] = {
-                        PlayerName: playerData.name,
-                        TimerTicks: timerTicks
-                    };
-                }
+    <script>
+        function steamid3ToSteamid64(usteamid) {
+            const steamid64ident = BigInt('76561197960265728');
+            for (const ch of ['[', ']']) {
+                usteamid = usteamid.replace(ch, '');
             }
 
-            outputJsonElement.value = JSON.stringify(outputJson, null, 2);
-        } catch (error) {
-            outputJsonElement.value = 'Error: Invalid JSON input';
+            const usteamidSplit = usteamid.split(':');
+            const commid = BigInt(usteamidSplit[2]) + steamid64ident;
+
+            return commid.toString();
         }
-    }
-</script>
+
+        function secondsToTicks(seconds) {
+            const ticksPerSecond = 64;
+            const ticks = Math.floor(seconds * ticksPerSecond);
+            return ticks;
+        }
+
+        function convertJson() {
+            const inputJsonElement = document.getElementById('inputJson');
+
+            try {
+                const inputJson = JSON.parse(inputJsonElement.value);
+                const outputJson = {};
+
+                for (const mapName in inputJson) {
+                    for (const usteamid in inputJson[mapName].data) {
+                        const playerData = inputJson[mapName].data[usteamid];
+                        const steamid64 = steamid3ToSteamid64(usteamid);
+                        const timerTicks = secondsToTicks(parseFloat(playerData.time));
+
+                        if (!outputJson[steamid64]) {
+                            outputJson[steamid64] = {
+                                PlayerName: playerData.name,
+                                TimerTicks: timerTicks
+                            };
+                        } else {
+                            outputJson[steamid64].TimerTicks += timerTicks;
+                        }
+                    }
+                }
+
+                const outputFileName = Object.keys(inputJson).length > 0 ? Object.keys(inputJson)[0] : 'converted.json';
+                const outputBlob = new Blob([JSON.stringify(outputJson, null, 2)], { type: 'application/json' });
+
+                // Create a download link
+                const downloadLink = document.createElement('a');
+                downloadLink.href = URL.createObjectURL(outputBlob);
+                downloadLink.download = outputFileName;
+
+                // Append the link to the body
+                document.body.appendChild(downloadLink);
+
+                // Trigger the click event to start the download
+                downloadLink.click();
+
+                // Remove the link from the body
+                document.body.removeChild(downloadLink);
+            } catch (error) {
+                alert('Error: Invalid JSON input');
+            }
+        }
+    </script>
 </body>
 
 </html>
